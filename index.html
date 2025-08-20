@@ -1,0 +1,724 @@
+// Add text data
+        addTextBtn.addEventListener('click', async () => {
+            const text = textData.value.trim();
+            if (!text) {
+                showStatus('Please enter some text data', 'error');
+                return;
+            }
+
+            try {
+                addTextBtn.innerHTML = '<div class="spinner"></div> Adding...';
+                addTextBtn.disabled = true;
+
+                const chunks = await ragSystem.addText(text);
+                showStatus(`Added ${chunks} text chunks to RAG store`, 'success');
+                textData.value = '';
+                updateRagStoreDisplay();
+            } catch (error) {
+                showStatus(`Error adding text: ${error.message}`, 'error');
+            } finally {
+                addTextBtn.innerHTML = '<span>Add Text</span>';
+                addTextBtn.disabled = false;
+            }
+        });
+
+        // Handle file upload
+        uploadBtn.addEventListener('click', async () => {
+            const file = fileUpload.files[0];
+            if (!file) {
+                showStatus('Please select a file', 'error');
+                return;
+            }
+
+            try {
+                uploadBtn.innerHTML = '<div class="spinner"></div> Uploading...';
+                uploadBtn.disabled = true;
+
+                const result = await ragSystem.uploadFile(file);
+                showStatus(`Uploaded and processed ${result.filename} - ${result.chunks} chunks added`, 'success');
+                fileUpload.value = '';
+                updateRagStoreDisplay();
+            } catch (error) {
+                showStatus(`Error uploading file: ${error.message}`, 'error');
+            } finally {
+                uploadBtn.innerHTML = '<span>Upload File</span>';
+                uploadBtn.disabled = false;
+            }
+        });
+
+        // Add website content
+        addWebsiteBtn.addEventListener('click', async () => {
+            const url = websiteUrl.value.trim();
+            if (!url) {
+                showStatus('Please enter a website URL', 'error');
+                return;
+            }
+
+            try {
+                addWebsiteBtn.innerHTML = '<div class="spinner"></div> Fetching...';
+                addWebsiteBtn.disabled = true;
+
+                const result = await ragSystem.addWebsite(url<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px dashed #e1e8ed;
+            border-radius: 10px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        input[type="url"], input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="url"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            min-height: 44px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .chat-panel {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.bot {
+            background: white;
+            border: 1px solid #e1e8ed;
+            color: #2c3e50;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+        }
+
+        .status-message {
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #b3d7ff;
+        }
+
+        .rag-store {
+            margin-bottom: 20px;
+        }
+
+        .store-item {
+            background: #f8f9fa;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .store-item-info {
+            flex: 1;
+        }
+
+        .store-item-type {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .store-item-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 RAG Application</h1>
+            <p>Upload documents, add websites, and chat with your data</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Data Sources Panel -->
+            <div class="panel">
+                <h2>📄 Data Sources</h2>
+                
+                <!-- Text Input -->
+                <div class="input-group">
+                    <label for="textData">Direct Text Input:</label>
+                    <textarea id="textData" placeholder="Enter your text data here..."></textarea>
+                    <button class="btn" id="addTextBtn">
+                        <span>Add Text</span>
+                    </button>
+                </div>
+
+                <!-- File Upload -->
+                <div class="input-group">
+                    <label for="fileUpload">Upload File (PDF, TXT, CSV):</label>
+                    <input type="file" id="fileUpload" accept=".pdf,.txt,.csv" />
+                    <button class="btn" id="uploadBtn">
+                        <span>Upload File</span>
+                    </button>
+                </div>
+
+                <!-- Website URL -->
+                <div class="input-group">
+                    <label for="websiteUrl">Website URL:</label>
+                    <input type="url" id="websiteUrl" placeholder="https://example.com" />
+                    <button class="btn" id="addWebsiteBtn">
+                        <span>Add Website</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- RAG Store Panel -->
+            <div class="panel">
+                <h2>🗄️ RAG Store</h2>
+                <div id="statusMessages"></div>
+                <div class="rag-store" id="ragStore">
+                    <p style="color: #6c757d; font-style: italic;">No data indexed yet. Add some data sources to get started!</p>
+                </div>
+                <button class="btn" id="clearStoreBtn" style="background: #dc3545;">
+                    <span>Clear Store</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Panel -->
+        <div class="chat-panel">
+            <h2>💬 Chat with Your Data</h2>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <strong>RAG Assistant:</strong> Hello! Upload some documents or add text data, then ask me questions about them.
+                </div>
+            </div>
+            <div class="chat-input-group">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask a question about your data..." />
+                <button class="btn" id="sendBtn">
+                    <span>Send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Backend API integration
+        const API_BASE_URL = 'http://localhost:5000';
+        
+        class RAGSystem {
+            constructor() {
+                this.stats = { totalChunks: 0, sources: {} };
+                this.loadStats();
+            }
+
+            async makeRequest(endpoint, options = {}) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...options.headers
+                        },
+                        ...options
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || `HTTP ${response.status}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    console.error(`API Error (${endpoint}):`, error);
+                    throw error;
+                }
+            }
+
+            async loadStats() {
+                try {
+                    this.stats = await this.makeRequest('/stats');
+                } catch (error) {
+                    console.error('Failed to load stats:', error);
+                }
+            }
+
+            async addText(text, source = 'direct') {
+                const result = await this.makeRequest('/add-text', {
+                    method: 'POST',
+                    body: JSON.stringify({ text, source })
+                });
+                await this.loadStats();
+                return result.chunks;
+            }
+
+            async uploadFile(file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const result = await this.makeRequest('/upload', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {} // Let browser set multipart headers
+                });
+                await this.loadStats();
+                return result;
+            }
+
+            async addWebsite(url) {
+                const result = await this.makeRequest('/add-website', {
+                    method: 'POST',
+                    body: JSON.stringify({ url })
+                });
+                await this.loadStats();
+                return result;
+            }
+
+            async query(question) {
+                const queryResult = await this.makeRequest('/query', {
+                    method: 'POST',
+                    body: JSON.stringify({ question })
+                });
+
+                if (queryResult.results.length === 0) {
+                    return "I don't have enough information to answer that question. Please add more relevant data to the RAG store.";
+                }
+
+                const answerResult = await this.makeRequest('/generate-answer', {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        question, 
+                        contexts: queryResult.results 
+                    })
+                });
+
+                return answerResult.answer;
+            }
+
+            async clearStore() {
+                await this.makeRequest('/clear', { method: 'DELETE' });
+                this.stats = { totalChunks: 0, sources: {} };
+            }
+        }
+
+        const ragSystem = new RAGSystem();
+
+        // UI Elements
+        const textData = document.getElementById('textData');
+        const addTextBtn = document.getElementById('addTextBtn');
+        const fileUpload = document.getElementById('fileUpload');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const websiteUrl = document.getElementById('websiteUrl');
+        const addWebsiteBtn = document.getElementById('addWebsiteBtn');
+        const ragStore = document.getElementById('ragStore');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const clearStoreBtn = document.getElementById('clearStoreBtn');
+        const statusMessages = document.getElementById('statusMessages');
+
+        // Status message helper
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status-message status-${type}`;
+            statusDiv.textContent = message;
+            statusMessages.appendChild(statusDiv);
+            
+            setTimeout(() => {
+                statusDiv.remove();
+            }, 5000);
+        }
+
+        // Update RAG store display
+        function updateRagStoreDisplay() {
+            if (ragSystem.stats.totalChunks === 0) {
+                ragStore.innerHTML = '<p style="color: #6c757d; font-style: italic;">No data indexed yet. Add some data sources to get started!</p>';
+                return;
+            }
+
+            ragStore.innerHTML = Object.entries(ragSystem.stats.sources).map(([source, count]) => `
+                <div class="store-item">
+                    <div class="store-item-info">
+                        <div class="store-item-type">${source}</div>
+                        <div class="store-item-name">${count} chunks</div>
+                        <div style="font-size: 12px; color: #6c757d;">Total: ${ragSystem.stats.totalChunks} chunks</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add text data
+        addTextBtn.addEventListener('click', async () => {
+            const text = textData.value.trim();
+            if (!text) {
+                showStatus('Please enter some text data', 'error');
+                return;
+            }
+
+            try {
+                addTextBtn.innerHTML = '<div class="spinner"></div> Adding...';
+                addTextBtn.disabled = true;
+
+                const chunks = await ragSystem.addText(text);
+                showStatus(`Added ${chunks} text chunks to RAG store`, 'success');
+                textData.value = '';
+                updateRagStoreDisplay();
+            } catch (error) {
+                showStatus(`Error adding text: ${error.message}`, 'error');
+            } finally {
+                addTextBtn.innerHTML = '<span>Add Text</span>';
+                addTextBtn.disabled = false;
+            }
+        });
+
+        // Handle file upload
+        uploadBtn.addEventListener('click', async () => {
+            const file = fileUpload.files[0];
+            if (!file) {
+                showStatus('Please select a file', 'error');
+                return;
+            }
+
+            try {
+                uploadBtn.innerHTML = '<div class="spinner"></div> Uploading...';
+                uploadBtn.disabled = true;
+
+                const result = await ragSystem.uploadFile(file);
+                showStatus(`Uploaded and processed ${result.filename} - ${result.chunks} chunks added`, 'success');
+                fileUpload.value = '';
+                updateRagStoreDisplay();
+            } catch (error) {
+                showStatus(`Error uploading file: ${error.message}`, 'error');
+            } finally {
+                uploadBtn.innerHTML = '<span>Upload File</span>';
+                uploadBtn.disabled = false;
+            }
+        });
+
+        // Add website content
+        addWebsiteBtn.addEventListener('click', async () => {
+            const url = websiteUrl.value.trim();
+            if (!url) {
+                showStatus('Please enter a website URL', 'error');
+                return;
+            }
+
+            try {
+                addWebsiteBtn.innerHTML = '<div class="spinner"></div> Fetching...';
+                addWebsiteBtn.disabled = true;
+
+                const result = await ragSystem.addWebsite(url);
+                showStatus(`Successfully added ${result.hostname} - ${result.chunks} chunks`, 'success');
+                websiteUrl.value = '';
+                updateRagStoreDisplay();
+                
+            } catch (error) {
+                showStatus(`Error processing website: ${error.message}`, 'error');
+            } finally {
+                addWebsiteBtn.innerHTML = '<span>Add Website</span>';
+                addWebsiteBtn.disabled = false;
+            }
+        });
+
+        // Handle chat
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            messageDiv.innerHTML = `<strong>${isUser ? 'You' : 'RAG Assistant'}:</strong> ${content}`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function handleQuery() {
+            const question = chatInput.value.trim();
+            if (!question) return;
+
+            addMessage(question, true);
+            chatInput.value = '';
+
+            // Show loading
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot';
+            loadingDiv.innerHTML = '<strong>RAG Assistant:</strong> <div class="spinner"></div> Searching and generating answer...';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const answer = await ragSystem.query(question);
+                loadingDiv.remove();
+                addMessage(answer);
+            } catch (error) {
+                loadingDiv.remove();
+                addMessage(`Sorry, I encountered an error: ${error.message}`, false);
+                showStatus(`Query error: ${error.message}`, 'error');
+            }
+        }
+
+        sendBtn.addEventListener('click', handleQuery);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleQuery();
+            }
+        });
+
+        // Clear store
+        clearStoreBtn.addEventListener('click', async () => {
+            if (confirm('Are you sure you want to clear all data from the RAG store?')) {
+                try {
+                    clearStoreBtn.innerHTML = '<div class="spinner"></div> Clearing...';
+                    clearStoreBtn.disabled = true;
+
+                    await ragSystem.clearStore();
+                    updateRagStoreDisplay();
+                    showStatus('RAG store cleared', 'success');
+                    
+                    // Clear chat
+                    chatMessages.innerHTML = `
+                        <div class="message bot">
+                            <strong>RAG Assistant:</strong> Hello! Upload some documents or add text data, then ask me questions about them.
+                        </div>
+                    `;
+                } catch (error) {
+                    showStatus(`Error clearing store: ${error.message}`, 'error');
+                } finally {
+                    clearStoreBtn.innerHTML = '<span>Clear Store</span>';
+                    clearStoreBtn.disabled = false;
+                }
+            }
+        });
+
+        // Initialize
+        updateRagStoreDisplay();
+
+        // Check backend connection on page load
+        async function checkBackendConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    const health = await response.json();
+                    console.log('✅ Backend connected:', health);
+                    showStatus('Connected to backend server', 'success');
+                } else {
+                    throw new Error('Backend not responding');
+                }
+            } catch (error) {
+                console.error('❌ Backend connection failed:', error);
+                showStatus('⚠️ Backend server not connected. Please start the backend server.', 'error');
+            }
+        }
+
+        checkBackendConnection();
+    </script>
+</body>
+</html>
