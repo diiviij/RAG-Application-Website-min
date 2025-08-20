@@ -1,159 +1,414 @@
-RAG Application
-Welcome to the RAG Application! This is a web-based tool that allows you to upload documents, add website content or text data, store it in a retrieval-augmented generation (RAG) system, and chat with your data using a language model. Built with a Node.js backend and a modern HTML/JavaScript frontend, this application leverages the LangChain framework and the Groq API for advanced text processing and generation.
-Table of Contents
+# 🤖 RAG Application
 
-Features
-Prerequisites
-Installation
-Usage
-Project Structure
-Configuration
-API Endpoints
-Troubleshooting
-Contributing
-License
-Contact
+<div align="center">
 
-Features
+**Welcome to the RAG Application!** 🚀
 
-Data Ingestion: Upload PDF, TXT, or CSV files, add text directly, or fetch content from websites.
-RAG Store: View and manage indexed data with chunk counts and source details.
-Chat Interface: Interact with your data using a conversational AI powered by Groq LLM.
-Real-Time Updates: Automatically refresh the RAG store and chat interface after data additions or deletions.
-Error Handling: Detailed status messages for successful operations and errors.
-Responsive Design: Works on desktop and mobile devices with a notebook-like UI.
+*A web-based tool that allows you to upload documents, add website content or text data, store it in a retrieval-augmented generation (RAG) system, and chat with your data using a language model.*
 
-Prerequisites
+### 🎥 **Watch Demo**
+[![Demo Video](https://img.shields.io/badge/🎬-Watch_Demo-red?style=for-the-badge)](https://drive.google.com/file/d/1N203LKZEw1wZHLwvFm0SwfgWqRyPXOoX/view?usp=sharing)
 
-Node.js: Version 14.x or higher.
-npm: Comes with Node.js installation.
-Backend Dependencies: Install required packages via npm.
-Groq API Key: Required for LLM functionality (optional for fallback embeddings).
-Text Editors: Any code editor (e.g., VS Code) for development.
+[🏁 Quick Start](#installation) • [📚 Documentation](#usage) • [🛠️ API](#api-endpoints) • [🤝 Contributing](#contributing)
 
-Installation
+</div>
 
-Clone the Repository:
+---
+
+## 📋 Table of Contents
+
+- [✨ Features](#-features)
+- [📋 Prerequisites](#-prerequisites)
+- [🚀 Installation](#-installation)
+- [💡 Usage](#-usage)
+- [📁 Project Structure](#-project-structure)
+- [⚙️ Configuration](#️-configuration)
+- [🔌 API Endpoints](#-api-endpoints)
+- [🛠️ Troubleshooting](#️-troubleshooting)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [📞 Contact](#-contact)
+
+---
+
+## ✨ Features
+
+<table>
+<tr>
+<td width="50%">
+
+### 📤 Data Ingestion
+- 📄 Upload **PDF, TXT, CSV** files
+- ✍️ Add text **directly**
+- 🌐 Fetch content from **websites**
+
+### 💬 Chat Interface
+- 🤖 Conversational AI powered by **Groq LLM**
+- 📊 **Real-time** responses
+- 📱 **Mobile-friendly** design
+
+</td>
+<td width="50%">
+
+### 🗄️ RAG Store
+- 👁️ View and manage **indexed data**
+- 📈 Track **chunk counts** and sources
+- 🗑️ **Clear store** functionality
+
+### 🛡️ Reliability
+- ⚡ **Real-time updates**
+- 🚨 Detailed **error handling**
+- 📱 **Responsive design**
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📋 Prerequisites
+
+> **Required Dependencies**
+
+| Component | Version | Description |
+|-----------|---------|-------------|
+| Node.js | `14.x+` | JavaScript runtime |
+| npm | Latest | Package manager |
+| Groq API Key | - | API key for LLM functionality |
+
+---
+
+## 🚀 Installation
+
+### Step 1: Clone the Repository
+```bash
 git clone https://github.com/your-username/rag-application.git
 cd rag-application
+```
 
+### Step 2: Install Backend Dependencies
+```bash
+npm install
+```
 
-Install Backend Dependencies:
+<details>
+<summary>📦 View Required Packages</summary>
 
-Navigate to the project root where Server-langchain.js is located.
-Run:npm install
+- `express` - Web framework
+- `multer` - File upload handling
+- `langchain` - LLM framework
+- `@langchain/groq` - Groq integration
+- `cors` - Cross-origin requests
+- `dotenv` - Environment variables
 
+</details>
 
-Required packages include express, multer, langchain, @groq-ai/groq, and others (check package.json).
+### Step 3: Configure Environment
+Create a `.env` file in the project root:
 
+```env
+# 🔑 API Configuration
+GROQ_API_KEY=your_groq_api_key_here
 
-Set Up Environment Variables:
+# 🚀 Server Configuration
+PORT=5000
 
-Create a .env file in the project root.
-Add your Groq API key:GROQ_API_KEY=your_groq_api_key_here
+# 📁 File Configuration (Optional)
+MAX_FILE_SIZE=50MB
+```
 
-
-(Optional) Configure other settings like port or file size limits if needed.
-
-
-Run the Backend:
+### Step 4: Start the Backend
+```bash
 node Server-langchain.js
+```
 
+> ✅ Backend will start on `http://localhost:5000`
 
-The backend will start on http://localhost:5000.
+### Step 5: Open the Frontend
+Open `index.html` in your browser or serve it locally:
 
+```bash
+# Option 1: Direct file
+open index.html
 
-Open the Frontend:
+# Option 2: Local server
+npx serve .
+# or
+python -m http.server 8000
+```
 
-Open index.html in a web browser, or serve it using a local server (e.g., npx serve or a Python HTTP server).
+---
 
+## 💡 Usage
 
+### 📤 Adding Data
 
-Usage
+<table>
+<tr>
+<td width="33%">
 
-Add Data:
+#### ✍️ Text Input
+1. Enter text in **"Direct Text Input"**
+2. Click **"Add Text"**
+3. ✅ Text processed and indexed
 
-Text Input: Enter text in the "Direct Text Input" textarea and click "Add Text".
-File Upload: Select a PDF, TXT, or CSV file and click "Upload File".
-Website Content: Enter a URL and click "Add Website".
+</td>
+<td width="33%">
 
+#### 📁 File Upload
+1. Select **PDF/TXT/CSV** file
+2. Click **"Upload File"**
+3. ✅ File processed automatically
 
-Manage RAG Store:
+</td>
+<td width="33%">
 
-View indexed data in the "RAG Store" panel.
-Clear all data by clicking "Clear Store" (confirms with a dialog).
+#### 🌐 Website Content
+1. Enter website **URL**
+2. Click **"Add Website"**
+3. ✅ Content scraped and indexed
 
+</td>
+</tr>
+</table>
 
-Chat with Data:
+### 💾 Managing RAG Store
 
-Type a question in the chat input field and press "Send" or "Enter".
-The RAG Assistant will respond based on indexed data.
+- **View Data**: See all indexed documents in the "RAG Store" panel
+- **Track Progress**: Monitor chunk counts and source details  
+- **Clear Store**: Remove all data with confirmation dialog
 
+### 💬 Chatting with Data
 
-Status Updates:
+1. Type your question in the chat input field
+2. Press **"Send"** or **"Enter"**
+3. 🤖 RAG Assistant responds based on your indexed data
 
-Success, error, or info messages appear temporarily above the RAG Store.
+### 📊 Status Updates
 
+| Status | Description | Color |
+|--------|-------------|-------|
+| ✅ Success | Operation completed successfully | Green |
+| ❌ Error | Something went wrong | Red |
+| ℹ️ Info | General information | Blue |
 
+---
 
-Project Structure
+## 📁 Project Structure
+
+```
 rag-application/
-├── Server-langchain.js    # Backend server with LangChain integration
-├── index.html            # Frontend UI
-├── README.md             # This file
-├── .env                  # Environment variables (create manually)
-└── node_modules/         # Backend dependencies (after npm install)
+├── 📄 Server-langchain.js    # Backend server with LangChain
+├── 🌐 index.html            # Frontend UI
+├── 📖 README.md             # Documentation (this file)
+├── 🔧 .env                  # Environment variables
+├── 📦 package.json          # Dependencies
+└── 📁 node_modules/         # Backend dependencies
+```
 
-Configuration
+---
 
-API Base URL: Set to http://localhost:5000 by default in index.html. Change API_BASE_URL if hosting on a different server.
-File Limits: Backend supports files up to 50MB (configurable via multer).
-LLM: Uses deepseek-r1-distill-llama-70b by default with Groq. Fallback embeddings are used if the API key is missing.
+## ⚙️ Configuration
 
-API Endpoints
+### 🔗 API Configuration
+```javascript
+// In index.html
+const API_BASE_URL = 'http://localhost:5000';
+```
 
-POST /upload: Upload files (PDF, TXT, CSV).
-POST /add-text: Add text directly.
-POST /add-website: Add website content.
-POST /query: Perform similarity search on documents.
-POST /generate-answer: Generate answers using RAG.
-GET /stats: Get collection statistics.
-DELETE /clear: Clear the vector store.
-GET /health: Check backend health.
+### 📁 File Limits
+- **Maximum file size**: 50MB (configurable)
+- **Supported formats**: PDF, TXT, CSV
 
-Troubleshooting
+### 🤖 LLM Configuration
+- **Default model**: `deepseek-r1-distill-llama-70b`
+- **Fallback**: Fake embeddings if API key missing
+- **Provider**: Groq API
 
-File Upload Fails:
-Check browser Network tab for /upload request errors.
-Ensure the file field name is file and type is supported.
-Verify backend logs for multer or processing errors.
+---
 
+## 🔌 API Endpoints
 
-No Backend Response:
-Confirm the server is running on http://localhost:5000.
-Check CORS settings or firewall issues.
+<table>
+<tr>
+<th width="20%">Method</th>
+<th width="30%">Endpoint</th>
+<th width="50%">Description</th>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/upload</code></td>
+<td>📤 Upload files (PDF, TXT, CSV)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/add-text</code></td>
+<td>✍️ Add text directly</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/add-website</code></td>
+<td>🌐 Add website content</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/query</code></td>
+<td>🔍 Perform similarity search</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/generate-answer</code></td>
+<td>🤖 Generate answers using RAG</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/stats</code></td>
+<td>📊 Get collection statistics</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/clear</code></td>
+<td>🗑️ Clear the vector store</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/health</code></td>
+<td>❤️ Check backend health</td>
+</tr>
+</table>
 
+---
 
-Fake Embeddings Warning:
-Provide a valid GROQ_API_KEY in .env to use real embeddings.
+## 🛠️ Troubleshooting
 
+<details>
+<summary>📤 File Upload Fails</summary>
 
-RAG Store Not Updating:
-Reload stats manually or check /stats endpoint response.
+**Symptoms**: Upload button doesn't work or shows errors
 
+**Solutions**:
+- ✅ Check browser Network tab for `/upload` request errors
+- ✅ Ensure file field name is `file` and type is supported
+- ✅ Verify backend logs for multer or processing errors
+- ✅ Check file size (max 50MB)
 
+</details>
 
-Contributing
+<details>
+<summary>🔌 No Backend Response</summary>
 
-Fork the repository.
-Create a feature branch (git checkout -b feature/new-feature).
-Commit changes (git commit -m 'Add new feature').
-Push to the branch (git push origin feature/new-feature).
-Open a Pull Request.
+**Symptoms**: Frontend can't connect to backend
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details (create one if not present).
-Contact
+**Solutions**:
+- ✅ Confirm server is running on `http://localhost:5000`
+- ✅ Check CORS settings
+- ✅ Verify firewall isn't blocking the connection
+- ✅ Check console for network errors
 
-GitHub: [https://github.com/diiviij]
-Date Created: August 20, 2025
+</details>
+
+<details>
+<summary>⚠️ Fake Embeddings Warning</summary>
+
+**Symptoms**: "Using fake embeddings as fallback" message
+
+**Solutions**:
+- ✅ Provide a valid `GROQ_API_KEY` in `.env`
+- ✅ Restart the backend after adding the API key
+- ✅ Verify API key is correct and has proper permissions
+
+</details>
+
+<details>
+<summary>🔄 RAG Store Not Updating</summary>
+
+**Symptoms**: Data added but not visible in store
+
+**Solutions**:
+- ✅ Check `/stats` endpoint response manually
+- ✅ Refresh the browser page
+- ✅ Check browser console for JavaScript errors
+- ✅ Verify backend logs for processing errors
+
+</details>
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
+### 🍴 Fork & Clone
+```bash
+# Fork the repository on GitHub, then:
+git clone https://github.com/YOUR-USERNAME/rag-application.git
+cd rag-application
+```
+
+### 🌿 Create Feature Branch
+```bash
+git checkout -b feature/awesome-new-feature
+```
+
+### 💾 Commit Changes
+```bash
+git add .
+git commit -m "✨ Add awesome new feature"
+```
+
+### 🚀 Push & Create PR
+```bash
+git push origin feature/awesome-new-feature
+# Then create a Pull Request on GitHub
+```
+
+### 📝 Contribution Guidelines
+- 🐛 **Bug fixes** - Always welcome!
+- ✨ **New features** - Discuss in issues first
+- 📚 **Documentation** - Help improve our docs
+- 🧪 **Tests** - Add tests for new functionality
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+<details>
+<summary>📋 View License Details</summary>
+
+```
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software.
+```
+
+</details>
+
+---
+
+## 📞 Contact
+
+<div align="center">
+
+### 👨‍💻 Developer
+
+**GitHub**: [@diiviij](https://github.com/diiviij)
+
+**Created**: August 20, 2025
+
+---
+
+<sub>Made with ❤️ and lots of ☕</sub>
+
+### 🌟 If you found this helpful, please give it a star!
+
+**Created**: August 20, 2025
+
+[![GitHub stars](https://img.shields.io/github/stars/diiviij/rag-application?style=social)](https://github.com/diiviij/rag-application)
+
+</div>
