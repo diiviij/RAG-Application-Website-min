@@ -208,33 +208,43 @@ async function loadDocument(filePath, mimetype, originalname) {
 // Routes
 
 // Upload & index a file
+// Upload & index a file
 app.post("/upload", upload.single('file'), async (req, res) => {
+  console.log("Received upload request. File object:", req.file ? req.file.originalname : "No file");
   try {
     if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
+      console.error("No file uploaded in request. Body:", req.body, "Files:", req.files);
+      return res.status(400).json({ error: "No file uploaded. Please ensure a file is selected and the field name is 'file'." });
     }
 
     if (!vectorStore) {
+      console.error("Vector store not initialized");
       return res.status(500).json({ error: "Vector store not initialized" });
     }
 
     const filePath = req.file.path;
-    
+    console.log("Processing file at:", filePath);
+
     // Load document using appropriate loader
     const docs = await loadDocument(filePath, req.file.mimetype, req.file.originalname);
-    
+    console.log("Loaded document with", docs.length, "pages/chunks");
+
     if (!docs || docs.length === 0) {
+      console.warn("No content found in file:", req.file.originalname);
       return res.status(400).json({ error: "No content found in file" });
     }
 
     // Split documents into chunks
     const splitDocs = await textSplitter.splitDocuments(docs);
+    console.log("Split into", splitDocs.length, "chunks");
 
     // Add to vector store
     await vectorStore.addDocuments(splitDocs);
+    console.log("Added", splitDocs.length, "chunks to vector store");
 
     // Clean up uploaded file
     fs.unlinkSync(filePath);
+    console.log("Cleaned up temporary file:", filePath);
 
     res.json({ 
       message: "File processed & stored successfully",
@@ -243,51 +253,14 @@ app.post("/upload", upload.single('file'), async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Upload error:", error);
+    console.error("Upload error for file", req.file?.originalname, ":", error.stack);
     if (req.file && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
     }
+    if (error instanceof multer.MulterError) {
+      return res.status(400).json({ error: `Multer error: ${error.message}. Check file size (max 50MB) or type (PDF, TXT, CSV).` });
+    }
     res.status(500).json({ error: "Failed to upload file: " + error.message });
-  }
-});
-
-// Add text directly
-app.post("/add-text", async (req, res) => {
-  try {
-    const { text, source = 'direct', title = 'Direct Input' } = req.body;
-    
-    if (!text || !text.trim()) {
-      return res.status(400).json({ error: "No text provided" });
-    }
-
-    if (!vectorStore) {
-      return res.status(500).json({ error: "Vector store not initialized" });
-    }
-
-    // Create document
-    const doc = new Document({
-      pageContent: text,
-      metadata: {
-        source: source,
-        title: title,
-        uploadTime: new Date().toISOString()
-      }
-    });
-
-    // Split into chunks
-    const splitDocs = await textSplitter.splitDocuments([doc]);
-
-    // Add to vector store
-    await vectorStore.addDocuments(splitDocs);
-
-    res.json({ 
-      message: "Text processed & stored successfully",
-      chunks: splitDocs.length
-    });
-
-  } catch (error) {
-    console.error("Add text error:", error);
-    res.status(500).json({ error: "Failed to add text: " + error.message });
   }
 });
 
